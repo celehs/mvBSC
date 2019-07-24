@@ -1,8 +1,6 @@
 # Overview
 
-This package implements the multi-view Banded Spectral Clustering (mvBSC) algorithm developed by Luwan Zhang, Katherine Liao, Issac Kohane, and Tianxi Cai. The technical details of the mvBSC algorithm cnan be found at [here](https://arxiv.org/abs/1804.02097).  
-
-## Installation
+This R package implements the multi-view Banded Spectral Clustering (mvBSC) algorithm developed by Luwan Zhang, Katherine Liao, Issac Kohane, and Tianxi Cai. The technical details of the mvBSC algorithm can be found [here](https://arxiv.org/abs/1804.02097).  
 
 ## Installation
 
