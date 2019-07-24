@@ -4,7 +4,7 @@ Version: 0.1.0
 Authors@R: c(
     person("Luwan", "Zhang", role = c("aut", "cre"), email = "luwanzhang@gmail.com"),
     person("Ming", "Yang", role = "aut"),
-    person("Katherine", "Du", role = "aut")
+    person("Katherine", "Du", role = "aut"),
     person("Tianxi", "Cai", role = "aut")
     )
 Description: Multi-view Banded Spectral Clustering with Application to ICD9 Clustering.  
