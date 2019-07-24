@@ -22,7 +22,7 @@ Load package `mvBSC` into R:
 library(mvBSC)
 ```
 
-# Details
+# Main Steps
 
 The main fitting function is `mvbsc`, which performs multi-view banded spectral clustering for a given set of parameters. To tune parameters, first apply the function `expand.grid` to create a data frame that contains possible combinations of candidate paramters, then run `mvbsc` for each parameter combination and record the evaluation metrics such as ARI, NMI, and F_1 measure. Choose the optimal setting which yields the best model performence (e.g., maximum ARI + NMI) and save the corresponding clustering results for printing and visualization.
 
