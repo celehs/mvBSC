@@ -1,0 +1,26 @@
+#' @title ...
+#' @param cosK ...
+#' @param h ...
+#' @param k ...
+#' @param R ...
+#' @export
+get_U <- function(cosK, h, k, R) {
+  cosK_band <- cosK * (R <= h)
+  eigen_cosK_band <- eigen(cosK_band)
+  idx <- order(abs(eigen_cosK_band$values), decreasing = TRUE)
+  U <- eigen_cosK_band$vectors[, idx[1:k]]
+  rownames(U) <- rownames(cosK)
+  return(U)
+}
+
+#' @title ...
+#' @param codes ...
+#' @param labels ...
+#' @export
+get_Z <- function(codes, labels) {
+  uniqueLabels <- sort(unique(labels))
+  Z <- 1 * outer(labels, uniqueLabels, "==")  
+  rownames(Z) <- codes
+  colnames(Z) <- uniqueLabels
+  return(Z)
+}
