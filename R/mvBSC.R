@@ -61,7 +61,7 @@ ARI <- function(Z1, Z2, digits = 3) {
   a <- t(Z1) %*% one
   b <- t(Z2) %*% one
   A <- 0.5 * sum(apply(contingencyTb, c(1, 2), function(x) x^2 - x)) 
-  B <- 0.25 * sum(a*(a-1))*sum(b*(b-1))
+  B <- 0.25 * sum(a * (a - 1)) * sum(b * (b - 1))
   C <- 0.5 * n * (n - 1)
   D <- 0.25 * (sum(a * (a - 1)) + sum(b * (b - 1)))
   ARI <- (A - B / C) / (D - B / C)
@@ -114,3 +114,4 @@ mvbsc <- function(codes, wt, cosK, h, k, R, Z0, seed = 123, ...) {
          NMI = NMI(Z, Z0), 
          f_measure = F_measure(Z, Z0)))
 }
+
