@@ -84,34 +84,41 @@ F_measure <- function(Z, Z0, digits = 3) {
 
 #' @title ...
 #' @param codes ...
-#' @param wt ...
-#' @param cosK ...
-#' @param h ...
-#' @param k ...
-#' @param R ...
-#' @param Z0 ...
+#' @param distance ...
+#' @param similarity ...
+#' @param ncluster ...
+#' @param weights ...
+#' @param delta ...
+#' @param band ...
 #' @param seed ...
 #' @param ... ...
 #' @export
-mvbsc <- function(codes, wt, cosK, h, k, R, Z0, seed = 123, ...) {
+mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, band, seed) {
+  h <- band
+  k <- ncluster
+  R <- distance[codes, codes]
   W <- 0
-  for (i in 1:length(wt)) {
-    if (wt[i] > 0) {
-      tmp <- get_U(cosK = cosK[[i]], h = h[i], k = k, R = R)
-      W <- W + wt[i] * tcrossprod(tmp)
+  for (i in 1:length(weights)) {
+    if (weights[i] > 0) {
+      cosK <- similarity[[i]][codes, codes]
+      tmp <- get_U(cosK = cosK, h = h, k = k, R = R)
+      W <- W + weights[i] * tcrossprod(tmp)
     }
   }
-  eigen_W <- eigen(W)
-  idx <- order(abs(eigen_W$values), decreasing = TRUE)
-  U <- eigen_W$vectors[, idx[1:k]]
+  W_eigen <- eigen(W)
+  idx <- order(abs(W_eigen$values), decreasing = TRUE)
+  U <- W_eigen$vectors[, idx[1:k]]
   rownames(U) <- rownames(W)
   set.seed(seed)
-  kmeans_res <- kmeans(U, k, iter.max = 100, nstart = 25, ...)
-  Z <- get_Z(codes, kmeans_res$cluster[codes])
-  list(kmeans_res, 
-       metrics = c(
-         ARI = ARI(Z, Z0), 
-         NMI = NMI(Z, Z0), 
-         f_measure = F_measure(Z, Z0)))
+  fit <- kmeans(U, k, iter.max = 100, nstart = 25)
+  tbl <- data.frame(cluster = 1:k, size = NA, max_dist = NA)
+  for (i in 1:k) {
+    v <- names(fit$cluster)[fit$cluster == i]
+    tbl$size[i] <- length(v)
+    tbl$max_dist[i] <- max(R[v, v])
+  }
+  tbl2 <- tbl[order(tbl$max_dist), ]
+  rownames(tbl2) <- 1:k
+  list(cluster = fit$cluster, cluster_info = tbl2)
 }
 
