@@ -32,10 +32,10 @@ delta0
 
 ```{r}
 initial <- mvbsc_fit(
-  codes = rownames(this.R), 
+  codes = codes_with_phecode, # rownames(this.R), 
   distance =  this.R, 
   similarity = list(va_cosK, bio_cosK), 
-  ncluster = 30,
+  ncluster = 20,
   weights = c(va.wt = 0.5, bio.wt = 0.5), 
   delta = delta0, 
   band = 4, 
@@ -50,7 +50,7 @@ cluster0
 
 ```{r}
 regroup <- vector("list", length(cluster0))
-names(regroup) <- paste0("initial_", cluster0)
+# names(regroup) <- paste0("initial_", cluster0)
 ```
 
 ```{r}
