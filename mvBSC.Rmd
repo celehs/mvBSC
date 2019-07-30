@@ -55,10 +55,10 @@ regroup <- vector("list", length(cluster0))
 
 ```{r}
 for (i in 1:length(cluster0)) {
-  tmp <- names(initial$cluster[initial$cluster == cluster0[i]])
-  for (k in 2:(length(tmp) - 1)) {
+  codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
+  for (k in 2:(length(codes0) - 1)) {
     try <- mvbsc_fit(
-      codes = tmp,
+      codes = codes0,
       distance =  this.R, 
       similarity = list(va_cosK, bio_cosK), 
       ncluster = k,
