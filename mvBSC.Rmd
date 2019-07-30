@@ -54,6 +54,7 @@ regroup <- vector("list", length(cluster0))
 ```
 
 ```{r}
+DF <- data.frame(level1 = initial$cluster, level2 = 0)
 for (i in 1:length(cluster0)) {
   codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
   for (k in 2:(length(codes0) - 1)) {
@@ -69,7 +70,14 @@ for (i in 1:length(cluster0)) {
     if (all(try$cluster_info$max_dist <= delta0)) break
   }
   regroup[[i]] <- try
+  DF[names(regroup[[i]]$cluster), "level2"] <- regroup[[i]]$cluster
 }
 regroup
+```
+
+```{r}
+cluster <- paste0("C", DF$level1, ".", DF$level2)
+names(cluster) <- rownames(DF)
+cluster
 ```
 
