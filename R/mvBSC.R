@@ -112,7 +112,7 @@ F_measure <- function(Z, Z0, digits = 3) {
 #' @param band ...
 #' @param seed ...
 #' @export
-mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, band, seed) {
+mvbsc_fit0 <- function(codes, distance, similarity, ncluster, weights, delta, band, seed) {
   h <- band
   k <- ncluster
   R <- distance[codes, codes]
@@ -151,13 +151,13 @@ mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, ban
 #' @param band ...
 #' @param seed ...
 #' @export
-mvbsc <- function(codes, distance, similarity, ncluster, 
+mvbsc_fit <- function(codes, distance, similarity, ncluster, 
                   weights = NULL, delta = NULL, band = NULL, seed = 123) {
   m <- length(similarity)
   if (is.null(weights)) weights <- rep(1, m) / m
   if (is.null(delta)) delta <- min(apply(distance, 1, max))
   if (is.null(band)) band <- delta / 2
-  initial <- mvbsc_fit(
+  initial <- mvbsc_fit0(
     codes = codes, 
     distance = distance,
     similarity = similarity, 
@@ -172,7 +172,7 @@ mvbsc <- function(codes, distance, similarity, ncluster,
   for (i in 1:length(cluster0)) {
     codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
     for (k in 2:(length(codes0) - 1)) {
-      fit0 <- mvbsc_fit(
+      fit0 <- mvbsc_fit0(
         codes = codes0,
         distance =  distance, 
         similarity = similarity, 

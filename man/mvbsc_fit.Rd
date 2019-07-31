@@ -4,8 +4,8 @@
 \alias{mvbsc_fit}
 \title{...}
 \usage{
-mvbsc_fit(codes, distance, similarity, ncluster, weights, delta, band,
-  seed)
+mvbsc_fit(codes, distance, similarity, ncluster, weights = NULL,
+  delta = NULL, band = NULL, seed = 123)
 }
 \arguments{
 \item{codes}{...}
