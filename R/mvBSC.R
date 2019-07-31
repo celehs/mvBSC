@@ -205,10 +205,9 @@ mvbsc_fit <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
 #' @export
 mvbsc <- function(codes, distance, similarity, K0, 
                   delta = NULL, h = NULL, wt = NULL, seed = 123) {
-  m <- length(similarity)
-  if (is.null(wt)) wt <- rep(1, m) / m
   if (is.null(delta)) delta <- min(apply(distance, 1, max))
   if (is.null(h)) h <- seq(0, max(delta), length.out = 11)[-1]
+  if (is.null(wt)) wt <- rep(1, length(similarity)) / length(similarity)
   DF <- expand.grid(K0 = K0, delta = delta, h = h, ratio = NA)
   N <- NROW(DF)
   fit <- vector("list", N)
