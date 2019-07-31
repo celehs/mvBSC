@@ -194,7 +194,7 @@ mvbsc_fit <- function(codes, distance, similarity, ncluster,
   list(weights = weights, 
        delta = delta,
        band = band,
-       ratio = ratio,
+       cluster = cluster,
        size = table(cluster),
-       cluster = cluster)  
+       ratio = ratio)  
 }
