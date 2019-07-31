@@ -193,7 +193,7 @@ mvbsc <- function(codes, distance, similarity, ncluster,
   summary <- data.frame(delta = delta, band = band, ratio = ratio)
   list(weights = weights, 
        delta = delta,
-       bandd = band,
+       band = band,
        ratio = ratio,
        size = table(cluster),
        cluster = cluster)  
