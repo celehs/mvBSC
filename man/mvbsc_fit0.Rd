@@ -4,8 +4,7 @@
 \alias{mvbsc_fit0}
 \title{...}
 \usage{
-mvbsc_fit0(codes, distance, similarity, ncluster, weights, delta, band,
-  seed)
+mvbsc_fit0(codes, distance, similarity, K0, delta, h, wt, seed)
 }
 \arguments{
 \item{codes}{...}
@@ -14,13 +13,13 @@ mvbsc_fit0(codes, distance, similarity, ncluster, weights, delta, band,
 
 \item{similarity}{...}
 
-\item{ncluster}{...}
-
-\item{weights}{...}
+\item{K0}{...}
 
 \item{delta}{...}
 
-\item{band}{...}
+\item{h}{...}
+
+\item{wt}{...}
 
 \item{seed}{...}
 }

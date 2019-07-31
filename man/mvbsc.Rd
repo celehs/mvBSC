@@ -4,8 +4,8 @@
 \alias{mvbsc}
 \title{...}
 \usage{
-mvbsc(codes, distance, similarity, ncluster, weights = NULL,
-  delta = NULL, band = NULL, seed = 123)
+mvbsc(codes, distance, similarity, K0, delta = NULL, h = NULL,
+  wt = NULL, seed = 123)
 }
 \arguments{
 \item{codes}{...}
@@ -14,13 +14,13 @@ mvbsc(codes, distance, similarity, ncluster, weights = NULL,
 
 \item{similarity}{...}
 
-\item{ncluster}{...}
-
-\item{weights}{...}
+\item{K0}{...}
 
 \item{delta}{...}
 
-\item{band}{...}
+\item{h}{...}
+
+\item{wt}{...}
 
 \item{seed}{...}
 }
