@@ -220,7 +220,8 @@ mvbsc <- function(codes, distance, similarity, ncluster,
                           ncluster = DF$ncluster[i],
                           weights = weights,
                           delta = DF$delta[i], 
-                          band = DF$band[i])  
+                          band = DF$band[i],
+                          seed = seed)  
     DF$ratio[i] <- fit[[i]]$ratio
   }
   idx <- which.max(DF$ratio)
