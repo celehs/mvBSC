@@ -139,6 +139,6 @@ mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, ban
   }
   tbl2 <- tbl[order(tbl$max_dist), ]
   rownames(tbl2) <- 1:k
-  list(cluster = fit$cluster, cluster_info = tbl2)
+  list(cluster = fit$cluster, cluster_info = tbl2, U = U)
 }
 
