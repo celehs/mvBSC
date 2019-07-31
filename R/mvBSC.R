@@ -151,12 +151,7 @@ mvbsc_fit0 <- function(codes, distance, similarity, ncluster, weights, delta, ba
 #' @param band ...
 #' @param seed ...
 #' @export
-mvbsc_fit <- function(codes, distance, similarity, ncluster, 
-                  weights = NULL, delta = NULL, band = NULL, seed = 123) {
-  m <- length(similarity)
-  if (is.null(weights)) weights <- rep(1, m) / m
-  if (is.null(delta)) delta <- min(apply(distance, 1, max))
-  if (is.null(band)) band <- delta / 2
+mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, band, seed) {
   initial <- mvbsc_fit0(
     codes = codes, 
     distance = distance,
@@ -198,3 +193,38 @@ mvbsc_fit <- function(codes, distance, similarity, ncluster,
        size = table(cluster),
        ratio = ratio)  
 }
+
+#' @title ...
+#' @param codes ...
+#' @param distance ...
+#' @param similarity ...
+#' @param ncluster ...
+#' @param weights ...
+#' @param delta ...
+#' @param band ...
+#' @param seed ...
+#' @export
+mvbsc <- function(codes, distance, similarity, ncluster, 
+                  weights = NULL, delta = NULL, band = NULL, seed = 123) {
+  m <- length(similarity)
+  if (is.null(weights)) weights <- rep(1, m) / m
+  if (is.null(delta)) delta <- min(apply(distance, 1, max))
+  if (is.null(band)) band <- seq(0, delta, length.out = 11)[-1]
+  DF <- expand.grid(ncluster = ncluster, delta = delta, band = band, ratio = NA)
+  N <- NROW(DF)
+  fit <- vector("list", N)
+  for (i in 1:N) {
+    fit[[i]] <- mvbsc_fit(codes = codes,
+                          distance = distance, 
+                          similarity = similarity,
+                          ncluster = DF$ncluster[i],
+                          weights = weights,
+                          delta = DF$delta[i], 
+                          band = DF$band[i])  
+    DF$ratio[i] <- fit[[i]]$ratio
+  }
+  idx <- which.max(DF$ratio)
+  list(tuning = DF[order(-DF$ratio), ],
+       optimal = fit[[idx]])
+}
+
