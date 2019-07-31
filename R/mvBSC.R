@@ -164,12 +164,12 @@ mvbsc_fit <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
   DF <- data.frame(level1 = initial$cluster, level2 = 0)
   for (i in 1:length(cluster0)) {
     codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
-    for (k in 2:(length(codes0) - 1)) {
+    for (r in 2:(length(codes0) - 1)) {
       fit0 <- mvbsc_fit0(
         codes = codes0,
-        distance =  distance, 
+        distance = distance, 
         similarity = similarity, 
-        K0 = K0,
+        K0 = r,
         delta = delta,           
         h = h, 
         wt = wt,   
