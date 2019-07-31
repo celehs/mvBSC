@@ -188,6 +188,7 @@ mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, ban
   summary <- data.frame(delta = delta, band = band, ratio = ratio)
   list(ratio = ratio,
        weights = weights, 
+       ncluster = ncluster,
        delta = delta,
        band = band,
        size = table(cluster),
@@ -225,6 +226,6 @@ mvbsc <- function(codes, distance, similarity, ncluster,
     DF$ratio[i] <- fit[[i]]$ratio
   }
   idx <- which.max(DF$ratio)
-  list(tuning = DF[order(-DF$ratio), ],
+  list(summary = DF[order(-DF$ratio), ],
        optimal = fit[[idx]])
 }
