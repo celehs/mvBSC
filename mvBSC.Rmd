@@ -30,7 +30,6 @@ length(codes_in_use)
 mvbsc(codes = codes_in_use, 
       distance = this.R, 
       similarity = list(va_cosK, bio_cosK), 
-      # K0 = c(16, 18, 20, 22, 24), 
       K0 = c(15, 20),
       delta = c(5, 10),
       h = 1:5)
