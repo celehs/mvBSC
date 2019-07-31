@@ -34,15 +34,16 @@ get_Z <- function(codes, labels) {
 #' @export
 kmeans_ratio <- function(U, Zvec) {
   n <- length(Zvec)
-  mu0 <- apply(U, 2, mean) # grand mean of all codes
-  sstot <- sum(apply(U, 1, crossprod)) - n * crossprod(mu0)
+  mu0 <- colMeans(U) # grand mean of all codes
+  sstot <- sum(U^2) - n * sum(mu0^2)
   ssbtw <- 0
   g <- unique(Zvec)
   nk <- table(Zvec)[g]
   for (i in 1:length(g)) {
-    muk <- apply(U[Zvec == g[i], ], 2, mean) # group mean
-    ssbtw <- ssbtw + nk[i] * crossprod(muk - mu0)
+    muk <- colMeans(subset(U, Zvec == g[i])) # group mean
+    ssbtw <- ssbtw + nk[i] * sum((muk - mu0)^2)
   }
+  names(ssbtw) <- NULL
   ratio <- ssbtw / sstot
   return(ratio)
 }
