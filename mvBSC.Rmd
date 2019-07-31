@@ -23,61 +23,20 @@ bio_cosK <- readRDS(paste0("data/biobank_I00-I25_cosineMat.rds"))
 this.R <- readRDS(paste0("data/I00-I25_distR_wt_avg_1.rds"))
 icd.info <- readRDS("data/rollable_new_icd_info_20190130.rds")
 codes_in_use <- colnames(bio_cosK)
-codes_with_phecode <- codes_in_use[!is.na(icd.info[codes_in_use]$PheCode)] 
-pheCodes <- icd.info[codes_with_phecode]$PheCode
-Z0 <- get_Z(codes_with_phecode, pheCodes)
-delta0 <- min(apply(this.R, 1, max)) / 2
-delta0
+length(codes_in_use)
 ```
 
 ```{r}
-initial <- mvbsc_fit(
-  codes = codes_with_phecode, # rownames(this.R), 
-  distance =  this.R, 
-  similarity = list(va_cosK, bio_cosK), 
-  ncluster = 20,
-  weights = c(va.wt = 0.5, bio.wt = 0.5), 
-  delta = delta0, 
-  band = 4, 
-  seed = 123)
-initial
-```
-
-```{r}
-cluster0 <- subset(initial$cluster_info, max_dist > delta0)$cluster
-cluster0
-```
-
-```{r}
-regroup <- vector("list", length(cluster0))
-# names(regroup) <- paste0("initial_", cluster0)
-```
-
-```{r}
-DF <- data.frame(level1 = initial$cluster, level2 = 0)
-for (i in 1:length(cluster0)) {
-  codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
-  for (k in 2:(length(codes0) - 1)) {
-    try <- mvbsc_fit(
-      codes = codes0,
-      distance =  this.R, 
+mvbsc(codes = codes_in_use, 
+      distance = this.R, 
       similarity = list(va_cosK, bio_cosK), 
-      ncluster = k,
-      weights = c(va.wt = 0.5, bio.wt = 0.5),   
-      delta = delta0,           
-      band = 4, 
-      seed = 123)
-    if (all(try$cluster_info$max_dist <= delta0)) break
-  }
-  regroup[[i]] <- try
-  DF[names(regroup[[i]]$cluster), "level2"] <- regroup[[i]]$cluster
-}
-regroup
+      # K0 = c(16, 18, 20, 22, 24), 
+      K0 = c(15, 20),
+      delta = c(5, 10),
+      h = 1:5)
 ```
 
 ```{r}
-cluster <- paste0("C", DF$level1, ".", DF$level2)
-names(cluster) <- rownames(DF)
-cluster
+proc.time()
 ```
 
