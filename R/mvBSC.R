@@ -195,6 +195,6 @@ mvbsc <- function(codes, distance, similarity, ncluster,
        delta = delta,
        bandd = band,
        ratio = ratio,
-       summary = table(cluster),
+       size = table(cluster),
        cluster = cluster)  
 }
