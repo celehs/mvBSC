@@ -111,7 +111,6 @@ F_measure <- function(Z, Z0, digits = 3) {
 #' @param delta ...
 #' @param band ...
 #' @param seed ...
-#' @param ... ...
 #' @export
 mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, band, seed) {
   h <- band
@@ -142,3 +141,60 @@ mvbsc_fit <- function(codes, distance, similarity, ncluster, weights, delta, ban
   list(cluster = fit$cluster, cluster_info = tbl2, U = U)
 }
 
+#' @title ...
+#' @param codes ...
+#' @param distance ...
+#' @param similarity ...
+#' @param ncluster ...
+#' @param weights ...
+#' @param delta ...
+#' @param band ...
+#' @param seed ...
+#' @export
+mvbsc <- function(codes, distance, similarity, ncluster, 
+                  weights = NULL, delta = NULL, band = NULL, seed = 123) {
+  m <- length(similarity)
+  if (is.null(weights)) weights <- rep(1, m) / m
+  if (is.null(delta)) delta <- min(apply(distance, 1, max))
+  if (is.null(band)) band <- delta / 2
+  initial <- mvbsc_fit(
+    codes = codes, 
+    distance = distance,
+    similarity = similarity, 
+    ncluster = ncluster, 
+    weights = weights, 
+    delta = delta,
+    band = band,
+    seed = seed)
+  cluster0 <- subset(initial$cluster_info, initial$cluster_info$max_dist > delta)$cluster
+  regroup <- vector("list", length(cluster0))
+  DF <- data.frame(level1 = initial$cluster, level2 = 0)
+  for (i in 1:length(cluster0)) {
+    codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
+    for (k in 2:(length(codes0) - 1)) {
+      fit0 <- mvbsc_fit(
+        codes = codes0,
+        distance =  distance, 
+        similarity = similarity, 
+        ncluster = k,
+        weights = weights,   
+        delta = delta,           
+        band = band, 
+        seed = seed)
+      if (all(fit0$cluster_info$max_dist <= delta)) break
+    }
+    regroup[[i]] <- fit0
+    DF[names(regroup[[i]]$cluster), "level2"] <- regroup[[i]]$cluster
+  }
+  cluster <- paste0("C", DF$level1, ".", DF$level2)
+  cluster <- factor(cluster, labels = 1:length(unique(cluster)))
+  names(cluster) <- rownames(DF)
+  ratio <- ratio(initial$U[names(cluster), ], cluster)
+  summary <- data.frame(delta = delta, band = band, ratio = ratio)
+  list(weights = weights, 
+       delta = delta,
+       bandd = band,
+       ratio = ratio,
+       summary = table(cluster),
+       cluster = cluster)  
+}
