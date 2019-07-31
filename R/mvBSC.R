@@ -32,7 +32,7 @@ get_Z <- function(codes, labels) {
 #' @param U ...
 #' @param Zvec group membership vector
 #' @export
-kmeans_ratio <- function(U, Zvec) {
+ratio <- function(U, Zvec) {
   n <- length(Zvec)
   mu0 <- colMeans(U) # grand mean of all codes
   sstot <- sum(U^2) - n * sum(mu0^2)
