@@ -208,7 +208,7 @@ mvbsc <- function(codes, distance, similarity, K0,
   m <- length(similarity)
   if (is.null(wt)) wt <- rep(1, m) / m
   if (is.null(delta)) delta <- min(apply(distance, 1, max))
-  if (is.null(h)) h <- seq(0, delta, length.out = 11)[-1]
+  if (is.null(h)) h <- seq(0, max(delta), length.out = 11)[-1]
   DF <- expand.grid(K0 = K0, delta = delta, h = h, ratio = NA)
   N <- NROW(DF)
   fit <- vector("list", N)
