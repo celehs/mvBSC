@@ -29,6 +29,25 @@ get_Z <- function(codes, labels) {
 }
 
 #' @title ...
+#' @param U ...
+#' @param Zvec group membership vector
+#' @export
+kmeans_ratio <- function(U, Zvec) {
+  n <- length(Zvec)
+  mu0 <- apply(U, 2, mean) # grand mean of all codes
+  sstot <- sum(apply(U, 1, crossprod)) - n * crossprod(mu0)
+  ssbtw <- 0
+  g <- unique(Zvec)
+  nk <- table(Zvec)[g]
+  for (i in 1:length(g)) {
+    muk <- apply(U[Zvec == g[i], ], 2, mean) # group mean
+    ssbtw <- ssbtw + nk[i] * crossprod(muk - mu0)
+  }
+  ratio <- ssbtw / sstot
+  return(ratio)
+}
+
+#' @title ...
 #' @param Z1 ...
 #' @param Z2 ...
 #' @param digits ...
