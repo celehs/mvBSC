@@ -172,7 +172,7 @@ mvbsc_fit <- function(codes, distance, similarity, k, delta, h, wt, seed) {
         codes = codes0,
         distance = distance, 
         similarity = similarity, 
-        k = k,
+        k = nc,
         ncluster = nc,
         delta = delta,           
         h = h, 
