@@ -108,12 +108,13 @@ F_measure <- function(Z, Z0, digits = 3) {
 #' @param distance ...
 #' @param similarity ...
 #' @param k ...
+#' @param ncluster ...
 #' @param delta ...
 #' @param h ...
 #' @param wt ...
 #' @param seed ...
 #' @export
-mvbsc_fit0 <- function(codes, distance, similarity, k, delta, h, wt, seed) {
+mvbsc_fit0 <- function(codes, distance, similarity, k, ncluster, delta, h, wt, seed) {
   R <- distance[codes, codes]
   W <- 0
   for (i in 1:length(wt)) {
@@ -128,15 +129,15 @@ mvbsc_fit0 <- function(codes, distance, similarity, k, delta, h, wt, seed) {
   U <- W_eigen$vectors[, idx[1:k]]
   rownames(U) <- rownames(W)
   set.seed(seed)
-  fit <- kmeans(U, k, iter.max = 100, nstart = 25)
-  tbl <- data.frame(cluster = 1:k, size = NA, max_dist = NA)
-  for (i in 1:k) {
+  fit <- kmeans(U, ncluster, iter.max = 100, nstart = 25)
+  tbl <- data.frame(cluster = 1:ncluster, size = NA, max_dist = NA)
+  for (i in 1:ncluster) {
     v <- names(fit$cluster)[fit$cluster == i]
     tbl$size[i] <- length(v)
     tbl$max_dist[i] <- max(R[v, v])
   }
   tbl2 <- tbl[order(tbl$max_dist), ]
-  rownames(tbl2) <- 1:k
+  rownames(tbl2) <- 1:ncluster
   list(cluster = fit$cluster, cluster_info = tbl2, U = U)
 }
 
@@ -156,6 +157,7 @@ mvbsc_fit <- function(codes, distance, similarity, k, delta, h, wt, seed) {
     distance = distance,
     similarity = similarity, 
     k = k, 
+    ncluster = k,
     delta = delta,
     h = h,
     wt = wt, 
@@ -165,12 +167,13 @@ mvbsc_fit <- function(codes, distance, similarity, k, delta, h, wt, seed) {
   DF <- data.frame(level1 = initial$cluster, level2 = 0)
   for (i in 1:length(cluster0)) {
     codes0 <- names(initial$cluster[initial$cluster == cluster0[i]])
-    for (r in 2:(length(codes0) - 1)) {
+    for (nc in 2:(length(codes0) - 1)) {
       fit0 <- mvbsc_fit0(
         codes = codes0,
         distance = distance, 
         similarity = similarity, 
-        k = r,
+        k = k,
+        ncluster = nc,
         delta = delta,           
         h = h, 
         wt = wt,   
