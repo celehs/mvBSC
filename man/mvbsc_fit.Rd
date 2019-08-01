@@ -4,7 +4,7 @@
 \alias{mvbsc_fit}
 \title{...}
 \usage{
-mvbsc_fit(codes, distance, similarity, K0, delta, h, wt, seed)
+mvbsc_fit(codes, distance, similarity, k, delta, h, wt, seed)
 }
 \arguments{
 \item{codes}{...}
@@ -13,7 +13,7 @@ mvbsc_fit(codes, distance, similarity, K0, delta, h, wt, seed)
 
 \item{similarity}{...}
 
-\item{K0}{...}
+\item{k}{...}
 
 \item{delta}{...}
 

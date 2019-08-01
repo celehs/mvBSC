@@ -107,36 +107,36 @@ F_measure <- function(Z, Z0, digits = 3) {
 #' @param codes ...
 #' @param distance ...
 #' @param similarity ...
-#' @param K0 ...
+#' @param k ...
 #' @param delta ...
 #' @param h ...
 #' @param wt ...
 #' @param seed ...
 #' @export
-mvbsc_fit0 <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
+mvbsc_fit0 <- function(codes, distance, similarity, k, delta, h, wt, seed) {
   R <- distance[codes, codes]
   W <- 0
   for (i in 1:length(wt)) {
     if (wt[i] > 0) {
       cosK <- similarity[[i]][codes, codes]
-      tmp <- get_U(cosK = cosK, h = h, k = K0, R = R)
+      tmp <- get_U(cosK = cosK, h = h, k = k, R = R)
       W <- W + wt[i] * tcrossprod(tmp)
     }
   }
   W_eigen <- eigen(W)
   idx <- order(abs(W_eigen$values), decreasing = TRUE)
-  U <- W_eigen$vectors[, idx[1:K0]]
+  U <- W_eigen$vectors[, idx[1:k]]
   rownames(U) <- rownames(W)
   set.seed(seed)
-  fit <- kmeans(U, K0, iter.max = 100, nstart = 25)
-  tbl <- data.frame(cluster = 1:K0, size = NA, max_dist = NA)
-  for (i in 1:K0) {
+  fit <- kmeans(U, k, iter.max = 100, nstart = 25)
+  tbl <- data.frame(cluster = 1:k, size = NA, max_dist = NA)
+  for (i in 1:k) {
     v <- names(fit$cluster)[fit$cluster == i]
     tbl$size[i] <- length(v)
     tbl$max_dist[i] <- max(R[v, v])
   }
   tbl2 <- tbl[order(tbl$max_dist), ]
-  rownames(tbl2) <- 1:K0
+  rownames(tbl2) <- 1:k
   list(cluster = fit$cluster, cluster_info = tbl2, U = U)
 }
 
@@ -144,18 +144,18 @@ mvbsc_fit0 <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
 #' @param codes ...
 #' @param distance ...
 #' @param similarity ...
-#' @param K0 ...
+#' @param k ...
 #' @param delta ...
 #' @param h ...
 #' @param wt ...
 #' @param seed ...
 #' @export
-mvbsc_fit <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
+mvbsc_fit <- function(codes, distance, similarity, k, delta, h, wt, seed) {
   initial <- mvbsc_fit0(
     codes = codes, 
     distance = distance,
     similarity = similarity, 
-    K0 = K0, 
+    k = k, 
     delta = delta,
     h = h,
     wt = wt, 
@@ -170,7 +170,7 @@ mvbsc_fit <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
         codes = codes0,
         distance = distance, 
         similarity = similarity, 
-        K0 = r,
+        k = r,
         delta = delta,           
         h = h, 
         wt = wt,   
@@ -186,7 +186,7 @@ mvbsc_fit <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
   ratio <- ratio(initial$U[names(cluster), ], cluster)
   # summary <- data.frame(delta = delta, h = h, ratio = ratio)
   list(ratio = ratio,
-       K0 = K0,
+       k = k,
        delta = delta,
        h = h,
        wt = wt, 
@@ -198,25 +198,25 @@ mvbsc_fit <- function(codes, distance, similarity, K0, delta, h, wt, seed) {
 #' @param codes ...
 #' @param distance ...
 #' @param similarity ...
-#' @param K0 ...
+#' @param k ...
 #' @param delta ...
 #' @param h ...
 #' @param wt ...
 #' @param seed ...
 #' @export
-mvbsc <- function(codes, distance, similarity, K0, 
+mvbsc <- function(codes, distance, similarity, k, 
                   delta = NULL, h = NULL, wt = NULL, seed = 123) {
   if (is.null(delta)) delta <- min(apply(distance, 1, max))
   if (is.null(h)) h <- seq(0, max(delta), length.out = 11)[-1]
   if (is.null(wt)) wt <- rep(1, length(similarity)) / length(similarity)
-  DF <- expand.grid(K0 = K0, delta = delta, h = h, ratio = NA)
+  DF <- expand.grid(k = k, delta = delta, h = h, ratio = NA)
   N <- NROW(DF)
   fit <- vector("list", N)
   for (i in 1:N) {
     fit[[i]] <- mvbsc_fit(codes = codes,
                           distance = distance, 
                           similarity = similarity,
-                          K0 = DF$K0[i],
+                          k = DF$k[i],
                           delta = DF$delta[i], 
                           h = DF$h[i],
                           wt = wt,

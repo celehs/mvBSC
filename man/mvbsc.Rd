@@ -4,7 +4,7 @@
 \alias{mvbsc}
 \title{...}
 \usage{
-mvbsc(codes, distance, similarity, K0, delta = NULL, h = NULL,
+mvbsc(codes, distance, similarity, k, delta = NULL, h = NULL,
   wt = NULL, seed = 123)
 }
 \arguments{
@@ -14,7 +14,7 @@ mvbsc(codes, distance, similarity, K0, delta = NULL, h = NULL,
 
 \item{similarity}{...}
 
-\item{K0}{...}
+\item{k}{...}
 
 \item{delta}{...}
 
