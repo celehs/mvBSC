@@ -1,4 +1,5 @@
 #' @import stats
+#' @importFrom Matrix sparseMatrix
 NULL
 
 #' @title ...
@@ -225,4 +226,33 @@ mvbsc <- function(codes, distance, similarity, K0,
   idx <- which.max(DF$ratio)
   list(summary = DF[order(-DF$ratio), ],
        optimal = fit[[idx]])
+}
+
+#' @title ...
+#' @param W UU'
+#' @param k ...
+#' @param constraint_set ...
+#' @param alpha ...
+#' @param beta ...
+#' @param seed ...
+#' @export
+semi_kmeans <- function(W, k, constraint_set, alpha, beta, seed) {
+  n <- nrow(W)
+  A <- Matrix::sparseMatrix(
+    i = constraint_set$i,
+    j = constraint_set$j,
+    x = constraint_set$link,
+    dims = c(n, n))
+  A <- A + t(A)
+  diag(A) <- 1
+  K <- W + alpha * (A > 0) - beta * (A < 0)
+  eigK <- eigen(K)
+  large <- sort.int(eigK$values, decreasing = TRUE, index.return = TRUE)
+  # newU <- eigK$vectors[,large$ix[1:k]] # %*%diag(sqrt(large$x[1:k])) # should not use eigenvectors only
+  newk <- min(k, sum(eigK$values > 0))
+  newU <- eigK$vectors[, large$ix[1:newk]] %*% diag(sqrt(large$x[1:newk]))
+  rownames(newU) <- rownames(W)
+  set.seed(seed)
+  res <- kmeans(newU, k, iter.max = 1000, nstart = 25) 
+  res
 }
